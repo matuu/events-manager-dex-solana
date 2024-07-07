@@ -76,7 +76,7 @@ La fecha de entrega será el día miércoles 10 de julio.
 # Tareas
 
 1. crear un evento
-2. parcipación como colaborador
+2. participación como colaborador
 3. vender entradas
 4. distribuir ganancias (entre colaboradores)
 5. retirar fondos de la tesorería.
