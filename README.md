@@ -1,6 +1,11 @@
 # events-manager-dex-solana
 Final project of Heavy Duty Builder program Spanish edition, 2024
 
+## Integrantes
+
+- Ramón Montilla
+- Matuu Varela
+
 # Enunciado
 
 ### PROGRAMA DE ADMINISTRACIÓN DE EVENTOS EN SOLANA
@@ -70,24 +75,3 @@ EL proyecto se trabajará en parejas, no dudes en utilizar los canales de discor
 Se debe desarrollar el administrador de eventos utilizando el lenguaje de programación Rust y el framework Anchor.
 Utilice Github para almacenar y trabajar en el proyecto. 
 La fecha de entrega será el día miércoles 10 de julio.
-
-
-# Tareas
-
-1. crear un evento
-2. participación como colaborador
-3. vender entradas
-4. distribuir ganancias (entre colaboradores)
-5. retirar fondos de la tesorería.
-
-Implica:
-
-- tokens del evento: participar como colaborador: comprar token del evento
-- moneda aceptada: 1:1 con el token del evento
-- token account: boveda de tesorería
-- token account: boveda de ganancias (moneda aceptada)
-
-## Integrantes
-
-- Ramón Montilla
-- Matuu Varela
