@@ -41,15 +41,14 @@ Evento adquiridos por cada colaborador.
 
 ### DESCRIPCIÓN DEL PROGRAMA
 
-El administrador de eventos está compuesto por seis (6) instrucciones principales que
+El administrador de eventos está compuesto por cinco (5) instrucciones principales que
 describen el flujo de trabajo del sistema:
 
 - create_event: Crea un nuevo evento en la blockchain.
 
   Atributos:
     name: Nombre del evento.
-
-- ticket_price: Precio de la entrada del evento expresado en la Moneda Aceptada.
+    ticket_price: Precio de la entrada del evento expresado en la Moneda Aceptada.
 
 - buy_tokens: Transfiere el valor del precio del Token del Evento a la Bóveda de Tesorería y hace mint de los Tokens del Evento a la cuenta del colaborador.
 
@@ -87,3 +86,8 @@ Implica:
 - moneda aceptada: 1:1 con el token del evento
 - token account: boveda de tesorería
 - token account: boveda de ganancias (moneda aceptada)
+
+## Integrantes
+
+- Ramón Montilla
+- Matuu Varela
