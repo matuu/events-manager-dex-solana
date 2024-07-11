@@ -3,7 +3,7 @@ use {
     crate::instructions::*,
 };
 
-
+mod utils;
 mod collections;
 mod instructions;
 

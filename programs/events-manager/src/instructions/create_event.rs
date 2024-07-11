@@ -70,6 +70,7 @@ pub fn handle(ctx: Context<CreateEvent>, name: String, ticket_price: u64) -> Res
     ctx.accounts.event.name = name;
     ctx.accounts.event.ticket_price = ticket_price;
     ctx.accounts.event.active = true;
+    ctx.accounts.event.sponsors = 0;
     ctx.accounts.event.authority = ctx.accounts.authority.key();
     ctx.accounts.event.accepted_mint = ctx.accounts.accepted_mint.key();
     ctx.accounts.event.event_bump = ctx.bumps.event;
