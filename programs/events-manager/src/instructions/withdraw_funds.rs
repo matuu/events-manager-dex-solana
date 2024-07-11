@@ -8,7 +8,7 @@ use {
 
 #[derive(Accounts)]
 #[instruction(amount: u64)]
-pub struct WithdrawEarnings<'info> {
+pub struct WithdrawFunds<'info> {
     #[account(
         mut,
         seeds = [
@@ -51,7 +51,7 @@ pub struct WithdrawEarnings<'info> {
 }
 
 pub fn handle(
-    ctx: Context<WithdrawEarnings>,
+    ctx: Context<WithdrawFunds>,
     amount: u64,
 ) -> Result<()> {
     let seeds = [

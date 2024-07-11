@@ -181,7 +181,7 @@ describe("event-manager", () => {
    
     const amount = new BN(1); // 1 USDC
     await program.methods
-      .withdrawEarnings(amount)
+      .withdrawFunds(amount)
       .accounts({
         event: eventPublicKey,
         acceptedMint: acceptedMint, // example: USDC

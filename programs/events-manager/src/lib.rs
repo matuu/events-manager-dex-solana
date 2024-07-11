@@ -35,10 +35,10 @@ pub mod events_manager {
     }
 
      // withdraw funds
-     pub fn withdraw_earnings(
-        ctx: Context<WithdrawEarnings>,
+     pub fn withdraw_funds(
+        ctx: Context<WithdrawFunds>,
         amount: u64,
     ) -> Result<()> {
-        instructions::withdraw_earnings::handle(ctx, amount)
+        instructions::withdraw_funds::handle(ctx, amount)
     }
 }
