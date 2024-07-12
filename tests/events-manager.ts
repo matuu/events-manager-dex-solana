@@ -104,20 +104,25 @@ describe("event-manager", () => {
 
      // show new event info
      const eventAccount = await program.account.event.fetch(eventPublicKey);
-     console.log("Event info: ", eventAccount);
+     assert.isNotNull(eventAccount);
   });
 
    // TEST: Sponsor event
    it("Alice Should get 5 event tokens", async () => {
+     
+     // should have 500 USDC
+     const expected_usdc_amount = 500;
+     // collaborate
+     const expected_sponsor_amount = 5;
+
      // show alice accepted mint (USDC) ATA info
-     // should have 100 USDC
      let aliceUSDCBalance = await getAccount(
       provider.connection,
       aliceAcceptedMintATA // Alice Accepted mint account (USDC account)
     );
-    console.log("Alice USDC amount before: ", aliceUSDCBalance.amount);
+    assert.equal(Number(aliceUSDCBalance.amount), expected_usdc_amount)
 
-    const quantity = new BN(5); // 5 USDC 
+    const quantity = new BN(expected_sponsor_amount); // 5 USDC 
     await program.methods
       .sponsorEvent(quantity)
       .accounts({
@@ -137,7 +142,7 @@ describe("event-manager", () => {
       provider.connection,
       aliceEventMintATA // Alice Event Mint account (should have <quantity> tokens from sponsorship)
     );
-    console.log("Alice sponsorship tokens: ", aliceAccount.amount);
+    assert.equal(Number(aliceAccount.amount), expected_sponsor_amount);
 
      // show alice accepted mint (USDC) ATA info
      // should have 95 (100-5) USDC
@@ -145,12 +150,14 @@ describe("event-manager", () => {
       provider.connection,
       aliceAcceptedMintATA // Alice Accepted mint account (USDC account)
     );
-    console.log("Alice USDC amount after: ", aliceUSDCBalance.amount);
+    assert.equal(Number(aliceUSDCBalance.amount), expected_usdc_amount - expected_sponsor_amount);
   });
 
   // TEST: Sponsor event
   it("Bob Should get 48 event tokens", async () => {
-    const quantity = new BN(48);
+    const expected_bob_sponsor_amount = 48;
+    const quantity = new BN(expected_bob_sponsor_amount);
+
     await program.methods
       .sponsorEvent(quantity)
       .accounts({
@@ -169,20 +176,22 @@ describe("event-manager", () => {
       provider.connection,
       bobEventMintATA
     );
-    console.log("Bob sponsorship tokens: ", bobAccount.amount);
+    assert.equal(Number(bobAccount.amount), expected_bob_sponsor_amount);
   });
 
    // TEST: Buy Tickets
    it("Alice buy 23 tickets", async () => {
-     // show alice accepted mint (USDC) ATA info
-     // should have 95 USDC
+    const expected_tickets_amount = 23; 
+    const current_balance = 495;
+
+    // show alice accepted mint (USDC) ATA info     
      let aliceUSDCBalance = await getAccount(
       provider.connection,
       aliceAcceptedMintATA // Alice Accepted mint account (USDC account)
     );
-    console.log("Alice USDC amount before: ", aliceUSDCBalance.amount);
+    assert.equal(Number(aliceUSDCBalance.amount), current_balance)
 
-    const quantity = new BN(23);
+    const quantity = new BN(expected_tickets_amount);
      await program.methods
        .buyTickets(quantity) 
        .accounts({
@@ -195,27 +204,29 @@ describe("event-manager", () => {
        .rpc();
      
      // show event gain vault info
-     // should have 4 USDC ( 2 tickets x 2 USDC (tickect_price))
      const gainVaultAccount = await getAccount(
        provider.connection,
        gainVault // stores all accepted mint (USDC) from tickets purchase
      );
-     console.log("Event gain vault total: ", gainVaultAccount.amount);
+     // should have 46 USDC ( 23 tickets x 2 USDC (tickect_price))
+     assert.equal(Number(gainVaultAccount.amount), expected_tickets_amount * 2);
 
      // show alice accepted mint (USDC) ATA info
-     // shoul have 91 (95-4) USDC
      aliceUSDCBalance = await getAccount(
       provider.connection,
       aliceAcceptedMintATA // Alice Accepted mint account (USDC account)
     );
-    console.log("Alice USDC amount after: ", aliceUSDCBalance.amount);
-
+    assert.equal(Number(aliceUSDCBalance.amount), current_balance - (expected_tickets_amount * 2));
    });
 
    // TEST: Buy 154 Tickets
    it("Bob buy 154 tickets", async () => {
-    // Add your test here.
-    const quantity = new BN(154);
+    const expected_tickets_amount = 154;
+    const expected_total_gain_vault = (
+      (expected_tickets_amount * 2) +  // bob's tickets
+      (23 * 2)  // alice's tickets
+   );
+    const quantity = new BN(expected_tickets_amount);
      await program.methods
        .buyTickets(quantity)
        .accounts({
@@ -232,22 +243,23 @@ describe("event-manager", () => {
        provider.connection,
        gainVault
      );
-     console.log("Event gain vault amount: ", gainVaultAccount.amount);
+     assert.equal(Number(gainVaultAccount.amount), expected_total_gain_vault);
  
    });
 
     // TEST: Withdraw Funds
     it("Event organizer should withdraw 1 from treasury", async () => {
+      const expected_treasury_total = 53; // bob 48 + alice 5
+      const expected_treasury_withdraw_amount = 1;
+      
       // show event treasury vault info
-       // should have 5 USDC
-       let treasuryVaultAccount = await getAccount(
-         provider.connection,
-         treasuryVault
-       );
-       console.log("Event treasury vault total before: ", treasuryVaultAccount.amount);
+      let treasuryVaultAccount = await getAccount(
+        provider.connection,
+        treasuryVault
+      );
+      assert.equal(Number(treasuryVaultAccount.amount), expected_treasury_total);   
    
-   
-    const amount = new BN(1); // 1 USDC
+    const amount = new BN(expected_treasury_withdraw_amount); // 1 USDC
     await program.methods
       .withdrawFunds(amount)
       .accounts({
@@ -260,12 +272,11 @@ describe("event-manager", () => {
       .rpc();
     
     // show event treasury vault info
-    // should have 4 (5-1) USDC
     treasuryVaultAccount = await getAccount(
       provider.connection,
       treasuryVault
     );
-    console.log("Event treasury vault total after: ", treasuryVaultAccount.amount);
+    assert.equal(Number(treasuryVaultAccount.amount), expected_treasury_total - expected_treasury_withdraw_amount);
 
     // show event organizer accepted mint (USDC) ATA info
     // should have 1 accepted mint (USDC) 
@@ -273,7 +284,7 @@ describe("event-manager", () => {
       provider.connection,
       walletAcceptedMintATA // event organizer Accepted mint account (USDC account)
     );
-    console.log("Organizer USDC amount: ", organizerUSDCBalance.amount);
+    assert.equal(Number(organizerUSDCBalance.amount), expected_treasury_withdraw_amount);
 
   });
 
@@ -290,7 +301,7 @@ describe("event-manager", () => {
 
     // show new event info
     const eventAccount = await program.account.event.fetch(eventPublicKey);
-    console.log("Event is active: ", eventAccount.active);
+    assert.isFalse(eventAccount.active)
   });
 
   // TEST: Can't Buy 2 Tickets
@@ -313,29 +324,31 @@ describe("event-manager", () => {
       error = err;
     }
     assert.equal(error.error.errorCode.code, "EventClosed");
-    console.log("You can't buy tickets, the Event is already closed");
    });
 
   // TEST: Withdraw earnings
   it("Alice Should withdraw earnings", async () => {
-    
+    const expected_sporsorship_amnt = 53, // alice 5 + bob 48
+          expected_gain_vault_amnt = 354, // bob (154 * 2) + alice (23 * 2)
+          expected_alice_token = 5,
+          expected_alice_earning_amnt = 33;
     // show total sponsorships
     const eventAccount = await program.account.event.fetch(eventPublicKey);
-    console.log("Event total sponsorships: ", eventAccount.sponsors.toNumber());
+    assert.equal(eventAccount.sponsors.toNumber(), expected_sporsorship_amnt);
 
    // show event gain vault amount
    let gainVaultAccount = await getAccount(
      provider.connection,
      gainVault
    );
-   console.log("Event gain vault amount: ", gainVaultAccount.amount);
+   assert.equal(Number(gainVaultAccount.amount), expected_gain_vault_amnt)
 
    // show Alice sponsorship tokens
    let aliceTokens = await getAccount(
      provider.connection,
      aliceEventMintATA
    );
-   console.log("Alice sponsorship tokens: ", aliceTokens.amount);
+   assert.equal(Number(aliceTokens.amount), expected_alice_token);
    
    await program.methods
      .withdrawEarnings()
@@ -355,7 +368,7 @@ describe("event-manager", () => {
      provider.connection,
      gainVault
    );
-   console.log("Event gain vault amount: ", gainVaultAccount.amount);
+   assert.equal(Number(gainVaultAccount.amount), expected_gain_vault_amnt - expected_alice_earning_amnt);
  });
 
 });
