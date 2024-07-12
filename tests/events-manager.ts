@@ -68,9 +68,9 @@ describe("event-manager", () => {
 
     // creates a new wallet funded with 3 SOL 
     alice = await createFundedWallet(provider, 3);
-    // create alice accepted mint ata with 100 accepted mint
-    // Accepted mint = USDC  -> alice wallet = 100 USDC 
-    aliceAcceptedMintATA = await createAssociatedTokenAccount(provider,acceptedMint,500, alice);
+    // create alice accepted mint ata with 500 accepted mint
+    // Accepted mint = USDC  -> alice wallet = 500 USDC 
+    aliceAcceptedMintATA = await createAssociatedTokenAccount(provider,acceptedMint, 500, alice);
     // find alice event mint ata (only finds address)
     aliceEventMintATA = await getAssociatedTokenAddress(eventMint, alice.publicKey);
 
@@ -81,7 +81,7 @@ describe("event-manager", () => {
     // create bob wallet with lamports
     bob = await createFundedWallet(provider);
     // create bob accepted mint ata
-    bobAcceptedMintATA = await createAssociatedTokenAccount(provider,acceptedMint,500, bob)
+    bobAcceptedMintATA = await createAssociatedTokenAccount(provider,acceptedMint, 500, bob)
     // find bob event mint ata
     bobEventMintATA = await getAssociatedTokenAddress(eventMint, bob.publicKey);
   });
@@ -145,7 +145,7 @@ describe("event-manager", () => {
     assert.equal(Number(aliceAccount.amount), expected_sponsor_amount);
 
      // show alice accepted mint (USDC) ATA info
-     // should have 95 (100-5) USDC
+     // should have 495 (500-5) USDC
      aliceUSDCBalance = await getAccount(
       provider.connection,
       aliceAcceptedMintATA // Alice Accepted mint account (USDC account)
